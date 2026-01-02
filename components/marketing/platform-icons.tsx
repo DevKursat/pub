@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 const platforms = [
@@ -91,7 +92,7 @@ export function PlatformIcons() {
 
             {/* Center Pub Logo */}
             <motion.div
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
                 animate={{
                     boxShadow: [
                         '0 0 40px -10px rgba(139, 92, 246, 0.5)',
@@ -105,12 +106,18 @@ export function PlatformIcons() {
                     ease: 'easeInOut',
                 }}
             >
-                <span className="text-2xl font-bold text-white font-display">P</span>
+                <Image
+                    src="/logo.png"
+                    alt="Pub"
+                    width={64}
+                    height={64}
+                    className="rounded-2xl"
+                />
             </motion.div>
 
             {/* Orbiting Platforms */}
             {platforms.map((platform, index) => {
-                const angle = (index / platforms.length) * 360 - 90; // Start from top
+                const angle = (index / platforms.length) * 360 - 90;
                 const x = Math.cos((angle * Math.PI) / 180) * radius;
                 const y = Math.sin((angle * Math.PI) / 180) * radius;
 

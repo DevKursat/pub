@@ -1,80 +1,62 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Star, Quote } from 'lucide-react';
-import { Avatar } from '@/components/ui';
+import { motion } from 'framer-motion';
+import { Star } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 const testimonials = [
     {
         name: 'Sarah Chen',
         role: 'Content Creator',
-        avatar: null,
-        content: 'Pub has completely transformed my workflow. What used to take me 2 hours now takes 5 minutes. The scheduling AI is incredibly smart.',
+        avatar: '👩‍💻',
         rating: 5,
+        content: {
+            en: 'Pub has completely transformed how I manage my social media. I used to spend hours posting to each platform individually. Now it\'s just one click!',
+            tr: 'Pub sosyal medyamı yönetme şeklimi tamamen değiştirdi. Her platforma tek tek gönderi paylaşmak için saatler harcardım. Artık tek tıkla halloluyor!'
+        },
     },
     {
-        name: 'Marcus Johnson',
-        role: 'Social Media Manager',
-        avatar: null,
-        content: 'Managing 15 client accounts used to be a nightmare. With Pub, I can handle everything from one dashboard. Game changer!',
+        name: 'Marcus Williams',
+        role: 'Digital Marketing Agency',
+        avatar: '👨‍💼',
         rating: 5,
+        content: {
+            en: 'We manage 50+ client accounts and Pub has been a game-changer. The analytics alone are worth the subscription.',
+            tr: '50\'den fazla müşteri hesabı yönetiyoruz ve Pub oyun değiştirici oldu. Sadece analitikler bile aboneliğe değer.'
+        },
     },
     {
-        name: 'Emily Rodriguez',
-        role: 'Agency Owner',
-        avatar: null,
-        content: 'The analytics alone are worth the subscription. Being able to see all platforms in one view has helped us make better content decisions.',
-        rating: 5,
-    },
-    {
-        name: 'David Kim',
-        role: 'Startup Founder',
-        avatar: null,
-        content: 'We went from 1K to 50K followers in 3 months using Pub\'s scheduling and analytics. The ROI is incredible.',
-        rating: 5,
-    },
-    {
-        name: 'Lisa Thompson',
+        name: 'Emma Rodriguez',
         role: 'Influencer',
-        avatar: null,
-        content: 'Finally, a tool that actually understands how creators work. The format adaptation feature saves me hours every week.',
+        avatar: '👩‍🎤',
         rating: 5,
-    },
-    {
-        name: 'Alex Rivera',
-        role: 'Marketing Director',
-        avatar: null,
-        content: 'Enterprise-grade features at startup-friendly pricing. Pub is the best decision we made for our social strategy.',
-        rating: 5,
+        content: {
+            en: 'The AI scheduling feature is incredible. My engagement has gone up 40% since I started using Pub\'s optimal timing suggestions.',
+            tr: 'Yapay zeka zamanlama özelliği inanılmaz. Pub\'ın optimal zamanlama önerilerini kullanmaya başladığımdan beri etkileşimim %40 arttı.'
+        },
     },
 ];
 
 export function Testimonials() {
-    const ref = useRef<HTMLDivElement>(null);
-    const isInView = useInView(ref, { once: true, margin: '-100px' });
+    const { t, locale } = useTranslation();
 
     return (
         <section className="relative py-32 overflow-hidden">
-            {/* Background */}
             <div className="absolute inset-0">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-primary/5 rounded-full blur-[150px]" />
             </div>
 
             <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Header */}
                 <div className="text-center mb-16">
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
-                        className="text-display-md font-display font-bold text-foreground mb-6"
+                        className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-foreground mb-6"
                     >
-                        Loved by{' '}
-                        <span className="gradient-text">Creators</span>
-                        <br />
-                        Worldwide
+                        {t.testimonials.title}{' '}
+                        <span className="gradient-text">{t.testimonials.titleHighlight}</span>
                     </motion.h2>
 
                     <motion.p
@@ -84,63 +66,40 @@ export function Testimonials() {
                         transition={{ duration: 0.5, delay: 0.1 }}
                         className="max-w-2xl mx-auto text-lg text-foreground-muted"
                     >
-                        Join thousands of creators who are scaling their social presence with Pub.
+                        {t.testimonials.subtitle}
                     </motion.p>
                 </div>
 
-                {/* Testimonials Grid */}
-                <motion.div
-                    ref={ref}
-                    initial={{ opacity: 0 }}
-                    animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {testimonials.map((testimonial, index) => (
                         <motion.div
-                            key={index}
+                            key={testimonial.name}
                             initial={{ opacity: 0, y: 20 }}
-                            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
-                            className="relative p-6 rounded-2xl bg-background-secondary border border-border hover:border-border-hover transition-all duration-300 hover:shadow-card-hover group"
+                            className="p-6 rounded-2xl bg-background-secondary border border-border hover:border-border-hover transition-all duration-300"
                         >
-                            {/* Quote Icon */}
-                            <Quote className="absolute top-4 right-4 w-8 h-8 text-primary/20 group-hover:text-primary/30 transition-colors" />
-
-                            {/* Rating */}
                             <div className="flex items-center gap-1 mb-4">
                                 {[...Array(testimonial.rating)].map((_, i) => (
-                                    <Star
-                                        key={i}
-                                        className="w-4 h-4 fill-warning text-warning"
-                                    />
+                                    <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
                                 ))}
                             </div>
 
-                            {/* Content */}
-                            <p className="text-foreground-muted leading-relaxed mb-6">
-                                "{testimonial.content}"
+                            <p className="text-foreground-muted mb-6 leading-relaxed">
+                                "{testimonial.content[locale as 'en' | 'tr']}"
                             </p>
 
-                            {/* Author */}
                             <div className="flex items-center gap-3">
-                                <Avatar
-                                    src={testimonial.avatar}
-                                    fallback={testimonial.name}
-                                    size="md"
-                                />
+                                <div className="text-2xl">{testimonial.avatar}</div>
                                 <div>
-                                    <div className="font-medium text-foreground">
-                                        {testimonial.name}
-                                    </div>
-                                    <div className="text-sm text-foreground-subtle">
-                                        {testimonial.role}
-                                    </div>
+                                    <div className="font-semibold text-foreground">{testimonial.name}</div>
+                                    <div className="text-sm text-foreground-subtle">{testimonial.role}</div>
                                 </div>
                             </div>
                         </motion.div>
                     ))}
-                </motion.div>
+                </div>
             </div>
         </section>
     );

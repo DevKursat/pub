@@ -19,19 +19,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, Button } from '@/components/ui';
-
-const mainNavItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
-    { icon: Send, label: 'Publish', href: '/dashboard/publish' },
-    { icon: Calendar, label: 'Schedule', href: '/dashboard/schedule' },
-    { icon: BarChart3, label: 'Analytics', href: '/dashboard/analytics' },
-    { icon: Users, label: 'Accounts', href: '/dashboard/accounts' },
-];
-
-const bottomNavItems = [
-    { icon: Settings, label: 'Settings', href: '/dashboard/settings' },
-    { icon: HelpCircle, label: 'Help', href: '/dashboard/help' },
-];
+import { useTranslation } from '@/lib/i18n';
 
 interface SidebarProps {
     isCollapsed: boolean;
@@ -39,7 +27,21 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
+    const { t } = useTranslation();
     const pathname = usePathname();
+
+    const mainNavItems = [
+        { icon: LayoutDashboard, label: t.dashboard.sidebar.dashboard, href: '/dashboard' },
+        { icon: Send, label: t.dashboard.sidebar.publish, href: '/dashboard/publish' },
+        { icon: Calendar, label: t.dashboard.sidebar.schedule, href: '/dashboard/schedule' },
+        { icon: BarChart3, label: t.dashboard.sidebar.analytics, href: '/dashboard/analytics' },
+        { icon: Users, label: t.dashboard.sidebar.accounts, href: '/dashboard/accounts' },
+    ];
+
+    const bottomNavItems = [
+        { icon: Settings, label: t.dashboard.sidebar.settings, href: '/dashboard/settings' },
+        { icon: HelpCircle, label: t.dashboard.sidebar.help, href: '/dashboard/help' },
+    ];
 
     const NavItem = ({ item }: { item: typeof mainNavItems[0] }) => {
         const Icon = item.icon;
@@ -94,7 +96,6 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                 'bg-background-secondary border-r border-border'
             )}
         >
-            {/* Logo */}
             <div className={cn('flex items-center h-16 px-4', isCollapsed && 'justify-center')}>
                 <Link href="/dashboard" className="flex items-center gap-2">
                     <Image
@@ -119,31 +120,27 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                 </Link>
             </div>
 
-            {/* New Post Button */}
             <div className={cn('px-3 mb-4', isCollapsed && 'px-2')}>
                 <Button
                     size={isCollapsed ? 'md' : 'lg'}
                     className={cn('w-full', isCollapsed && 'px-0')}
                     leftIcon={<Plus className="w-5 h-5" />}
                 >
-                    {!isCollapsed && 'New Post'}
+                    {!isCollapsed && t.dashboard.newPost}
                 </Button>
             </div>
 
-            {/* Main Navigation */}
             <nav className="flex-1 px-3 space-y-1">
                 {mainNavItems.map((item) => (
                     <NavItem key={item.href} item={item} />
                 ))}
             </nav>
 
-            {/* Bottom Navigation */}
             <div className="px-3 py-4 space-y-1 border-t border-border">
                 {bottomNavItems.map((item) => (
                     <NavItem key={item.href} item={item} />
                 ))}
 
-                {/* User Profile */}
                 <div
                     className={cn(
                         'flex items-center gap-3 p-2 mt-4 rounded-xl bg-glass border border-border',
@@ -167,7 +164,6 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                 </div>
             </div>
 
-            {/* Collapse Toggle */}
             <button
                 onClick={onToggle}
                 className={cn(
