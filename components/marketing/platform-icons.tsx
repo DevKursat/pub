@@ -57,23 +57,41 @@ const platforms = [
             </svg>
         ),
     },
-    {
-        name: 'Pinterest',
-        color: '#e60023',
-        icon: (
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z" />
-            </svg>
-        ),
-    },
 ];
 
 export function PlatformIcons() {
+    const radius = 120;
+
     return (
-        <div className="relative flex items-center justify-center">
+        <div className="relative w-[320px] h-[320px] mx-auto">
+            {/* Pulse Rings */}
+            {[1, 2, 3].map((ring) => (
+                <motion.div
+                    key={ring}
+                    className="absolute rounded-full border border-primary/20"
+                    style={{
+                        width: 80 + ring * 70,
+                        height: 80 + ring * 70,
+                        left: '50%',
+                        top: '50%',
+                        transform: 'translate(-50%, -50%)',
+                    }}
+                    animate={{
+                        scale: [1, 1.05, 1],
+                        opacity: [0.3, 0.1, 0.3],
+                    }}
+                    transition={{
+                        duration: 3,
+                        delay: ring * 0.5,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                    }}
+                />
+            ))}
+
             {/* Center Pub Logo */}
             <motion.div
-                className="relative z-10 flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-glow shadow-primary-glow"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent"
                 animate={{
                     boxShadow: [
                         '0 0 40px -10px rgba(139, 92, 246, 0.5)',
@@ -91,108 +109,82 @@ export function PlatformIcons() {
             </motion.div>
 
             {/* Orbiting Platforms */}
-            <div className="absolute inset-0 flex items-center justify-center">
-                {platforms.map((platform, index) => {
-                    const angle = (index / platforms.length) * 360;
-                    const radius = 140;
-                    const x = Math.cos((angle * Math.PI) / 180) * radius;
-                    const y = Math.sin((angle * Math.PI) / 180) * radius;
+            {platforms.map((platform, index) => {
+                const angle = (index / platforms.length) * 360 - 90; // Start from top
+                const x = Math.cos((angle * Math.PI) / 180) * radius;
+                const y = Math.sin((angle * Math.PI) / 180) * radius;
 
-                    return (
-                        <motion.div
-                            key={platform.name}
-                            className="absolute"
-                            initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
-                            animate={{
-                                x,
-                                y,
-                                opacity: 1,
-                                scale: 1,
-                            }}
-                            transition={{
-                                delay: 0.1 * index,
-                                duration: 0.6,
-                                ease: 'easeOut',
-                            }}
-                        >
-                            <motion.div
-                                className="flex items-center justify-center w-14 h-14 rounded-xl bg-background-secondary border border-border shadow-lg cursor-pointer"
-                                style={{
-                                    color: platform.color,
-                                }}
-                                whileHover={{
-                                    scale: 1.15,
-                                    boxShadow: `0 0 30px -5px ${platform.color}40`,
-                                    borderColor: `${platform.color}50`,
-                                }}
-                                animate={{
-                                    y: [0, -5, 0],
-                                }}
-                                transition={{
-                                    y: {
-                                        duration: 2 + index * 0.2,
-                                        repeat: Infinity,
-                                        ease: 'easeInOut',
-                                    },
-                                }}
-                            >
-                                {platform.icon}
-                            </motion.div>
-
-                            {/* Connection Line */}
-                            <svg
-                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                                style={{
-                                    width: radius * 2,
-                                    height: radius * 2,
-                                }}
-                            >
-                                <motion.line
-                                    x1={radius}
-                                    y1={radius}
-                                    x2={radius - x}
-                                    y2={radius - y}
-                                    stroke={`${platform.color}30`}
-                                    strokeWidth="1"
-                                    strokeDasharray="4 4"
-                                    initial={{ pathLength: 0, opacity: 0 }}
-                                    animate={{ pathLength: 1, opacity: 1 }}
-                                    transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
-                                />
-                            </svg>
-                        </motion.div>
-                    );
-                })}
-            </div>
-
-            {/* Pulse Rings */}
-            {[1, 2, 3].map((ring) => (
-                <motion.div
-                    key={ring}
-                    className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                >
+                return (
                     <motion.div
-                        className="rounded-full border border-primary/20"
+                        key={platform.name}
+                        className="absolute z-10"
                         style={{
-                            width: 80 + ring * 90,
-                            height: 80 + ring * 90,
+                            left: '50%',
+                            top: '50%',
                         }}
+                        initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
                         animate={{
-                            scale: [1, 1.05, 1],
-                            opacity: [0.3, 0.1, 0.3],
+                            x,
+                            y,
+                            opacity: 1,
+                            scale: 1,
                         }}
                         transition={{
-                            duration: 3,
-                            delay: ring * 0.5,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
+                            delay: 0.1 * index,
+                            duration: 0.6,
+                            ease: 'easeOut',
                         }}
-                    />
-                </motion.div>
-            ))}
+                    >
+                        <motion.div
+                            className="flex items-center justify-center w-12 h-12 -ml-6 -mt-6 rounded-xl bg-background-secondary border border-border shadow-lg cursor-pointer"
+                            style={{
+                                color: platform.color,
+                            }}
+                            whileHover={{
+                                scale: 1.15,
+                                boxShadow: `0 0 30px -5px ${platform.color}40`,
+                                borderColor: `${platform.color}50`,
+                            }}
+                            animate={{
+                                y: [0, -4, 0],
+                            }}
+                            transition={{
+                                y: {
+                                    duration: 2 + index * 0.2,
+                                    repeat: Infinity,
+                                    ease: 'easeInOut',
+                                },
+                            }}
+                        >
+                            {platform.icon}
+                        </motion.div>
+
+                        {/* Connection Line */}
+                        <svg
+                            className="absolute pointer-events-none"
+                            style={{
+                                width: radius + 20,
+                                height: radius + 20,
+                                left: -radius / 2 - 10,
+                                top: -radius / 2 - 10,
+                            }}
+                        >
+                            <motion.line
+                                x1={radius / 2 + 10}
+                                y1={radius / 2 + 10}
+                                x2={radius / 2 + 10 - x / 2}
+                                y2={radius / 2 + 10 - y / 2}
+                                stroke={`${platform.color}30`}
+                                strokeWidth="1"
+                                strokeDasharray="4 4"
+                                initial={{ pathLength: 0, opacity: 0 }}
+                                animate={{ pathLength: 1, opacity: 1 }}
+                                transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
+                            />
+                        </svg>
+                    </motion.div>
+                );
+            })}
         </div>
     );
 }
