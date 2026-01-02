@@ -2,16 +2,8 @@
 
 import { useRef } from 'react';
 import Link from 'next/link';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import {
-    Zap,
-    Sparkles,
-    ArrowRight,
-    Play,
-    Clock,
-    BarChart3,
-    Users,
-} from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Sparkles, ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { PlatformIcons } from './platform-icons';
 
@@ -34,7 +26,7 @@ export function Hero() {
     return (
         <section
             ref={containerRef}
-            className="relative min-h-screen flex items-center justify-center overflow-hidden"
+            className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16"
         >
             {/* Animated Background */}
             <div className="absolute inset-0">
@@ -83,7 +75,7 @@ export function Hero() {
             {/* Content */}
             <motion.div
                 style={{ y, opacity }}
-                className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center"
+                className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center"
             >
                 {/* Badge */}
                 <motion.div
@@ -101,7 +93,7 @@ export function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
-                    className="text-display-lg font-display font-bold tracking-tight text-foreground mb-6"
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-foreground mb-6"
                 >
                     Publish{' '}
                     <span className="gradient-text">Everywhere</span>
@@ -114,7 +106,7 @@ export function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
-                    className="max-w-2xl mx-auto text-xl text-foreground-muted mb-10"
+                    className="max-w-2xl mx-auto text-lg sm:text-xl text-foreground-muted mb-10"
                 >
                     One click to distribute your content across TikTok, Instagram, YouTube,
                     Twitter, and more. Save hours every week with intelligent scheduling.
@@ -125,7 +117,7 @@ export function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.3 }}
-                    className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+                    className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
                 >
                     <Link href="/register">
                         <Button size="xl" rightIcon={<ArrowRight className="h-5 w-5" />}>
@@ -142,7 +134,7 @@ export function Hero() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
-                    className="mb-16"
+                    className="mb-12"
                 >
                     <PlatformIcons />
                 </motion.div>
@@ -151,15 +143,15 @@ export function Hero() {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.5 }}
-                    className="flex flex-wrap justify-center gap-8 sm:gap-16"
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                    className="flex flex-wrap justify-center gap-12 sm:gap-16"
                 >
                     {stats.map((stat, index) => (
                         <div key={index} className="text-center">
-                            <div className="text-3xl sm:text-4xl font-bold text-foreground mb-1">
+                            <div className="text-4xl sm:text-5xl font-bold text-foreground mb-2">
                                 {stat.value}
                             </div>
-                            <div className="text-sm text-foreground-subtle">{stat.label}</div>
+                            <div className="text-sm sm:text-base text-foreground-muted">{stat.label}</div>
                         </div>
                     ))}
                 </motion.div>
