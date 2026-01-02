@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Twitter, Github, Linkedin, Mail, ArrowUpRight } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 
@@ -70,9 +71,13 @@ export function Footer() {
                     {/* Logo & Description */}
                     <div className="col-span-2">
                         <Link href="/" className="inline-flex items-center gap-2 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                                <span className="text-lg font-bold text-white font-display">P</span>
-                            </div>
+                            <Image
+                                src="/logo.png"
+                                alt="Pub"
+                                width={40}
+                                height={40}
+                                className="rounded-xl"
+                            />
                             <span className="text-xl font-display font-bold text-foreground">Pub</span>
                         </Link>
                         <p className="text-foreground-muted text-sm leading-relaxed mb-6 max-w-xs">

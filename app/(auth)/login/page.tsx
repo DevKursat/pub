@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Chrome, Github, ArrowLeft, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@/components/ui';
+import { Chrome, Github, ArrowLeft } from 'lucide-react';
+import { Button, Input } from '@/components/ui';
 
 export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -39,11 +40,15 @@ export default function LoginPage() {
                     </Link>
 
                     {/* Logo */}
-                    <div className="flex items-center gap-2 mb-8">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                            <span className="text-lg font-bold text-white font-display">P</span>
-                        </div>
-                        <span className="text-xl font-display font-bold text-foreground">Pub</span>
+                    <div className="flex items-center gap-3 mb-8">
+                        <Image
+                            src="/logo.png"
+                            alt="Pub"
+                            width={48}
+                            height={48}
+                            className="rounded-xl"
+                        />
+                        <span className="text-2xl font-display font-bold text-foreground">Pub</span>
                     </div>
 
                     {/* Header */}
@@ -137,11 +142,10 @@ export default function LoginPage() {
                     transition={{ duration: 0.5, delay: 0.2 }}
                     className="text-center max-w-md"
                 >
-                    {/* Illustration placeholder */}
+                    {/* Logo Illustration */}
                     <div className="relative mb-8">
                         <div className="w-64 h-64 mx-auto rounded-3xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
                             <motion.div
-                                className="w-32 h-32 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-glow shadow-primary-glow"
                                 animate={{
                                     y: [0, -10, 0],
                                 }}
@@ -151,9 +155,13 @@ export default function LoginPage() {
                                     ease: 'easeInOut',
                                 }}
                             >
-                                <div className="w-full h-full flex items-center justify-center">
-                                    <span className="text-5xl font-bold text-white font-display">P</span>
-                                </div>
+                                <Image
+                                    src="/logo.png"
+                                    alt="Pub"
+                                    width={128}
+                                    height={128}
+                                    className="rounded-2xl shadow-2xl"
+                                />
                             </motion.div>
                         </div>
                     </div>

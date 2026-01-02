@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Chrome, Github, ArrowLeft, Check } from 'lucide-react';
-import { Button, Input, Card } from '@/components/ui';
+import { Button, Input } from '@/components/ui';
 
 const features = [
     'Publish to 7+ platforms with one click',
@@ -40,11 +41,15 @@ export default function RegisterPage() {
                     className="max-w-md"
                 >
                     {/* Logo */}
-                    <div className="flex items-center gap-2 mb-12">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                            <span className="text-lg font-bold text-white font-display">P</span>
-                        </div>
-                        <span className="text-xl font-display font-bold text-foreground">Pub</span>
+                    <div className="flex items-center gap-3 mb-12">
+                        <Image
+                            src="/logo.png"
+                            alt="Pub"
+                            width={48}
+                            height={48}
+                            className="rounded-xl"
+                        />
+                        <span className="text-2xl font-display font-bold text-foreground">Pub</span>
                     </div>
 
                     <h2 className="text-3xl font-display font-bold text-foreground mb-4">

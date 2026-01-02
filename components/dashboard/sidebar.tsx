@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -12,7 +13,6 @@ import {
     Users,
     Settings,
     HelpCircle,
-    LogOut,
     ChevronLeft,
     ChevronRight,
     Plus,
@@ -97,9 +97,13 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             {/* Logo */}
             <div className={cn('flex items-center h-16 px-4', isCollapsed && 'justify-center')}>
                 <Link href="/dashboard" className="flex items-center gap-2">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
-                        <span className="text-base font-bold text-white font-display">P</span>
-                    </div>
+                    <Image
+                        src="/logo.png"
+                        alt="Pub"
+                        width={36}
+                        height={36}
+                        className="rounded-lg flex-shrink-0"
+                    />
                     <AnimatePresence>
                         {!isCollapsed && (
                             <motion.span
