@@ -7,17 +7,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { cn } from '@/lib/utils';
-
-const navLinks = [
-    { label: 'Features', href: '#features' },
-    { label: 'Pricing', href: '#pricing' },
-    { label: 'Blog', href: '#' },
-    { label: 'Docs', href: '#' },
-];
+import { useTranslation } from '@/lib/i18n';
 
 export function Navbar() {
+    const { t } = useTranslation();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const navLinks = [
+        { label: t.nav.features, href: '#features' },
+        { label: t.nav.pricing, href: '#pricing' },
+        { label: t.nav.blog, href: '#' },
+        { label: t.nav.docs, href: '#' },
+    ];
 
     useEffect(() => {
         const handleScroll = () => {
@@ -77,11 +79,11 @@ export function Navbar() {
                         <div className="hidden md:flex items-center gap-3">
                             <Link href="/login">
                                 <Button variant="ghost" size="sm">
-                                    Log in
+                                    {t.nav.login}
                                 </Button>
                             </Link>
                             <Link href="/register">
-                                <Button size="sm">Get Started</Button>
+                                <Button size="sm">{t.nav.getStarted}</Button>
                             </Link>
                         </div>
 
@@ -124,11 +126,11 @@ export function Navbar() {
                             <div className="pt-4 flex flex-col gap-3">
                                 <Link href="/login">
                                     <Button variant="secondary" className="w-full">
-                                        Log in
+                                        {t.nav.login}
                                     </Button>
                                 </Link>
                                 <Link href="/register">
-                                    <Button className="w-full">Get Started</Button>
+                                    <Button className="w-full">{t.nav.getStarted}</Button>
                                 </Link>
                             </div>
                         </div>

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Outfit } from 'next/font/google';
 import './globals.css';
+import { I18nProvider } from '@/lib/i18n';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -80,9 +81,11 @@ export default function RootLayout({
     return (
         <html lang="en" className={`dark ${inter.variable} ${outfit.variable}`}>
             <body className="min-h-screen bg-background font-sans antialiased">
-                <div className="relative flex min-h-screen flex-col">
-                    {children}
-                </div>
+                <I18nProvider>
+                    <div className="relative flex min-h-screen flex-col">
+                        {children}
+                    </div>
+                </I18nProvider>
             </body>
         </html>
     );

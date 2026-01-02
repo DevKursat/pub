@@ -1,0 +1,187 @@
+{
+    "nav": {
+        "features": "Özellikler",
+        "pricing": "Fiyatlar",
+        "blog": "Blog",
+        "docs": "Dökümanlar",
+        "login": "Giriş Yap",
+        "getStarted": "Başla"
+    },
+    "hero": {
+        "badge": "Yapay zeka destekli zamanlama ile",
+        "title": "Her Yerde",
+        "titleHighlight": "Yayınla",
+        "titleSub": "Anında",
+        "description": "Tek tıkla içeriklerini TikTok, Instagram, YouTube, Twitter ve daha fazlasında paylaş. Akıllı zamanlama ile her hafta saatler kazan.",
+        "cta": "Ücretsiz Dene",
+        "watchDemo": "Demo İzle",
+        "stats": {
+            "posts": "Yayınlanan Gönderi",
+            "users": "Aktif Kullanıcı",
+            "platforms": "Platform"
+        }
+    },
+    "features": {
+        "title": "Sosyal medyada",
+        "titleHighlight": "zirveye çıkmak",
+        "subtitle": "Sosyal medya varlığını büyütmek isteyen içerik üreticileri ve işletmeler için güçlü özellikler.",
+        "items": {
+            "multiPlatform": {
+                "title": "Çoklu Platform Yayını",
+                "description": "Tek tıkla TikTok, Instagram, YouTube, Twitter, Facebook, LinkedIn ve Pinterest'te yayınla."
+            },
+            "scheduler": {
+                "title": "Akıllı Zamanlayıcı",
+                "description": "Yapay zeka kitlenizi analiz eder ve maksimum etkileşim için en iyi zamanları önerir."
+            },
+            "analytics": {
+                "title": "Birleşik Analitik",
+                "description": "Tüm sosyal medya metriklerini tek bir güzel panelde takip et."
+            },
+            "queue": {
+                "title": "İçerik Kuyruğu",
+                "description": "Haftalarca içerik planla ve zamanla. Ayarla ve unut."
+            },
+            "formatting": {
+                "title": "Otomatik Biçimlendirme",
+                "description": "İçeriğin her platform için otomatik olarak yeniden boyutlandırılır ve optimize edilir."
+            },
+            "collaboration": {
+                "title": "Ekip İşbirliği",
+                "description": "Ekip üyelerini davet et, roller ata ve sorunsuz bir şekilde birlikte çalış."
+            }
+        }
+    },
+    "pricing": {
+        "title": "Basit, şeffaf",
+        "titleHighlight": "fiyatlandırma",
+        "subtitle": "İhtiyaçlarına uygun planı seç. Tüm planlar 14 günlük ücretsiz deneme içerir.",
+        "monthly": "Aylık",
+        "yearly": "Yıllık",
+        "save": "%20 Tasarruf",
+        "perMonth": "/ay",
+        "popular": "Popüler",
+        "getStarted": "Başla",
+        "currentPlan": "Mevcut Plan",
+        "plans": {
+            "starter": {
+                "name": "Başlangıç",
+                "description": "Başlamak için mükemmel",
+                "features": [
+                    "3 sosyal hesap",
+                    "Ayda 30 zamanlanmış gönderi",
+                    "Temel analitik",
+                    "E-posta desteği"
+                ]
+            },
+            "pro": {
+                "name": "Pro",
+                "description": "Büyüyen içerik üreticileri için",
+                "features": [
+                    "10 sosyal hesap",
+                    "Sınırsız zamanlanmış gönderi",
+                    "Gelişmiş analitik",
+                    "Öncelikli destek",
+                    "Ekip işbirliği",
+                    "Özel markalama"
+                ]
+            },
+            "enterprise": {
+                "name": "Kurumsal",
+                "description": "Büyük ekipler için",
+                "features": [
+                    "Sınırsız hesap",
+                    "Sınırsız her şey",
+                    "Beyaz etiket çözümü",
+                    "Özel hesap yöneticisi",
+                    "Özel entegrasyonlar",
+                    "SLA garantisi"
+                ]
+            }
+        }
+    },
+    "testimonials": {
+        "title": "Dünya genelinde",
+        "titleHighlight": "içerik üreticilerinin tercihi",
+        "subtitle": "Sosyal medyaları için Pub'a güvenen binlerce içerik üreticisi ve işletmeye katıl."
+    },
+    "footer": {
+        "newsletter": {
+            "title": "Gelişmelerden haberdar ol",
+            "description": "Ürün güncellemeleri, ipuçları ve haberleri e-postana al.",
+            "placeholder": "E-posta adresin",
+            "subscribe": "Abone Ol"
+        },
+        "links": {
+            "product": "Ürün",
+            "resources": "Kaynaklar",
+            "company": "Şirket",
+            "legal": "Yasal"
+        },
+        "copyright": "Tüm hakları saklıdır.",
+        "builtWith": "Dünya genelindeki içerik üreticileri için ❤️ ile yapıldı"
+    },
+    "auth": {
+        "login": {
+            "title": "Tekrar hoş geldin",
+            "subtitle": "Devam etmek için hesabına giriş yap",
+            "orEmail": "veya e-posta ile devam et",
+            "email": "E-posta",
+            "password": "Şifre",
+            "rememberMe": "Beni hatırla",
+            "forgotPassword": "Şifremi unuttum",
+            "signIn": "Giriş Yap",
+            "noAccount": "Hesabın yok mu?",
+            "signUpFree": "Ücretsiz kayıt ol"
+        },
+        "register": {
+            "title": "Hesabını oluştur",
+            "subtitle": "Bugün ücretsiz denemeye başla. Kredi kartı gerekmez.",
+            "orEmail": "veya e-posta ile devam et",
+            "fullName": "Ad Soyad",
+            "email": "E-posta",
+            "password": "Şifre",
+            "passwordHint": "En az 8 karakter olmalı",
+            "createAccount": "Hesap Oluştur",
+            "terms": "Hesap oluşturarak şunları kabul etmiş olursun:",
+            "termsLink": "Kullanım Şartları",
+            "and": "ve",
+            "privacyLink": "Gizlilik Politikası",
+            "hasAccount": "Zaten hesabın var mı?",
+            "signIn": "Giriş yap"
+        },
+        "decorative": {
+            "title": "Her yerde anında yayınla",
+            "description": "Pub'ın akıllı sosyal medya dağıtımı ile her hafta saatler kazanan binlerce içerik üreticisine katıl."
+        },
+        "features": [
+            "Tek tıkla 7+ platformda yayınla",
+            "Yapay zeka destekli optimal zamanlama",
+            "Birleşik analitik panosu",
+            "Kredi kartı gerekmez"
+        ]
+    },
+    "dashboard": {
+        "welcome": "Tekrar hoş geldin",
+        "newPost": "Yeni Gönderi",
+        "stats": {
+            "followers": "Toplam Takipçi",
+            "posts": "Yayınlanan Gönderi",
+            "reach": "Toplam Erişim",
+            "engagement": "Etkileşim Oranı"
+        },
+        "recentPosts": "Son Gönderiler",
+        "viewAll": "Tümünü gör",
+        "schedule": "Bugünün Programı",
+        "scheduleNew": "Yeni gönderi planla",
+        "sidebar": {
+            "dashboard": "Panel",
+            "publish": "Yayınla",
+            "schedule": "Zamanlama",
+            "analytics": "Analitik",
+            "accounts": "Hesaplar",
+            "settings": "Ayarlar",
+            "help": "Yardım"
+        }
+    }
+}

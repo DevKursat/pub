@@ -1,0 +1,187 @@
+{
+    "nav": {
+        "features": "Features",
+        "pricing": "Pricing",
+        "blog": "Blog",
+        "docs": "Docs",
+        "login": "Log in",
+        "getStarted": "Get Started"
+    },
+    "hero": {
+        "badge": "Now with AI-powered scheduling",
+        "title": "Publish",
+        "titleHighlight": "Everywhere",
+        "titleSub": "Instantly",
+        "description": "One click to distribute your content across TikTok, Instagram, YouTube, Twitter, and more. Save hours every week with intelligent scheduling.",
+        "cta": "Start Free Trial",
+        "watchDemo": "Watch Demo",
+        "stats": {
+            "posts": "Posts Published",
+            "users": "Active Users",
+            "platforms": "Platforms"
+        }
+    },
+    "features": {
+        "title": "Everything you need to",
+        "titleHighlight": "dominate social",
+        "subtitle": "Powerful features designed for creators and businesses who want to scale their social presence.",
+        "items": {
+            "multiPlatform": {
+                "title": "Multi-Platform Publishing",
+                "description": "Publish to TikTok, Instagram, YouTube, Twitter, Facebook, LinkedIn, and Pinterest with one click."
+            },
+            "scheduler": {
+                "title": "Smart Scheduler",
+                "description": "AI analyzes your audience and suggests the best times to post for maximum engagement."
+            },
+            "analytics": {
+                "title": "Unified Analytics",
+                "description": "Track all your social media metrics in one beautiful dashboard."
+            },
+            "queue": {
+                "title": "Content Queue",
+                "description": "Plan and schedule weeks of content in advance. Set it and forget it."
+            },
+            "formatting": {
+                "title": "Auto-Formatting",
+                "description": "Your content is automatically resized and optimized for each platform."
+            },
+            "collaboration": {
+                "title": "Team Collaboration",
+                "description": "Invite team members, assign roles, and work together seamlessly."
+            }
+        }
+    },
+    "pricing": {
+        "title": "Simple, transparent",
+        "titleHighlight": "pricing",
+        "subtitle": "Choose the plan that fits your needs. All plans include a 14-day free trial.",
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "save": "Save 20%",
+        "perMonth": "/month",
+        "popular": "Popular",
+        "getStarted": "Get Started",
+        "currentPlan": "Current Plan",
+        "plans": {
+            "starter": {
+                "name": "Starter",
+                "description": "Perfect for getting started",
+                "features": [
+                    "3 social accounts",
+                    "30 scheduled posts/month",
+                    "Basic analytics",
+                    "Email support"
+                ]
+            },
+            "pro": {
+                "name": "Pro",
+                "description": "For growing creators",
+                "features": [
+                    "10 social accounts",
+                    "Unlimited scheduled posts",
+                    "Advanced analytics",
+                    "Priority support",
+                    "Team collaboration",
+                    "Custom branding"
+                ]
+            },
+            "enterprise": {
+                "name": "Enterprise",
+                "description": "For large teams",
+                "features": [
+                    "Unlimited accounts",
+                    "Unlimited everything",
+                    "White-label solution",
+                    "Dedicated account manager",
+                    "Custom integrations",
+                    "SLA guarantee"
+                ]
+            }
+        }
+    },
+    "testimonials": {
+        "title": "Loved by",
+        "titleHighlight": "creators worldwide",
+        "subtitle": "Join thousands of creators and businesses who trust Pub for their social media."
+    },
+    "footer": {
+        "newsletter": {
+            "title": "Stay in the loop",
+            "description": "Get product updates, tips, and news delivered to your inbox.",
+            "placeholder": "Enter your email",
+            "subscribe": "Subscribe"
+        },
+        "links": {
+            "product": "Product",
+            "resources": "Resources",
+            "company": "Company",
+            "legal": "Legal"
+        },
+        "copyright": "All rights reserved.",
+        "builtWith": "Built with ❤️ for creators worldwide"
+    },
+    "auth": {
+        "login": {
+            "title": "Welcome back",
+            "subtitle": "Sign in to your account to continue",
+            "orEmail": "or continue with email",
+            "email": "Email",
+            "password": "Password",
+            "rememberMe": "Remember me",
+            "forgotPassword": "Forgot password?",
+            "signIn": "Sign in",
+            "noAccount": "Don't have an account?",
+            "signUpFree": "Sign up for free"
+        },
+        "register": {
+            "title": "Create your account",
+            "subtitle": "Start your free trial today. No credit card required.",
+            "orEmail": "or continue with email",
+            "fullName": "Full Name",
+            "email": "Email",
+            "password": "Password",
+            "passwordHint": "Must be at least 8 characters",
+            "createAccount": "Create account",
+            "terms": "By creating an account, you agree to our",
+            "termsLink": "Terms of Service",
+            "and": "and",
+            "privacyLink": "Privacy Policy",
+            "hasAccount": "Already have an account?",
+            "signIn": "Sign in"
+        },
+        "decorative": {
+            "title": "Publish everywhere, instantly",
+            "description": "Join thousands of creators who save hours every week with Pub's intelligent social media distribution."
+        },
+        "features": [
+            "Publish to 7+ platforms with one click",
+            "AI-powered optimal scheduling",
+            "Unified analytics dashboard",
+            "No credit card required"
+        ]
+    },
+    "dashboard": {
+        "welcome": "Welcome back",
+        "newPost": "New Post",
+        "stats": {
+            "followers": "Total Followers",
+            "posts": "Posts Published",
+            "reach": "Total Reach",
+            "engagement": "Engagement Rate"
+        },
+        "recentPosts": "Recent Posts",
+        "viewAll": "View all",
+        "schedule": "Today's Schedule",
+        "scheduleNew": "Schedule new post",
+        "sidebar": {
+            "dashboard": "Dashboard",
+            "publish": "Publish",
+            "schedule": "Schedule",
+            "analytics": "Analytics",
+            "accounts": "Accounts",
+            "settings": "Settings",
+            "help": "Help"
+        }
+    }
+}

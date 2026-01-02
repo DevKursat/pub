@@ -1,28 +1,30 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { PlatformIcons } from './platform-icons';
+import { useTranslation } from '@/lib/i18n';
 
 export function Hero() {
+    const { t } = useTranslation();
+
     const stats = [
-        { value: '10M+', label: 'Posts Published' },
-        { value: '50K+', label: 'Active Users' },
-        { value: '7', label: 'Platforms' },
+        { value: '10M+', label: t.hero.stats.posts },
+        { value: '50K+', label: t.hero.stats.users },
+        { value: '7', label: t.hero.stats.platforms },
     ];
 
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-10">
             {/* Animated Background */}
             <div className="absolute inset-0 pointer-events-none">
-                {/* Gradient Mesh */}
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(139,92,246,0.15)_0%,_transparent_50%)]" />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(6,182,212,0.1)_0%,_transparent_50%)]" />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(16,185,129,0.08)_0%,_transparent_50%)]" />
 
-                {/* Grid Pattern */}
                 <div
                     className="absolute inset-0 opacity-[0.02]"
                     style={{
@@ -32,30 +34,15 @@ export function Hero() {
                     }}
                 />
 
-                {/* Floating Orbs */}
                 <motion.div
                     className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px]"
-                    animate={{
-                        x: [0, 50, 0],
-                        y: [0, -30, 0],
-                    }}
-                    transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                    }}
+                    animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
                 />
                 <motion.div
                     className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/15 rounded-full blur-[100px]"
-                    animate={{
-                        x: [0, -40, 0],
-                        y: [0, 40, 0],
-                    }}
-                    transition={{
-                        duration: 10,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                    }}
+                    animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
+                    transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
                 />
             </div>
 
@@ -70,7 +57,7 @@ export function Hero() {
                         className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm"
                     >
                         <Sparkles className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-medium text-primary">Now with AI-powered scheduling</span>
+                        <span className="text-sm font-medium text-primary">{t.hero.badge}</span>
                     </motion.div>
 
                     {/* Headline */}
@@ -80,12 +67,12 @@ export function Hero() {
                         transition={{ duration: 0.5, delay: 0.1 }}
                         className="text-5xl sm:text-6xl md:text-7xl font-display font-bold tracking-tight mb-6"
                     >
-                        <span className="text-white">Publish </span>
+                        <span className="text-white">{t.hero.title} </span>
                         <span className="bg-gradient-to-r from-purple-400 via-cyan-400 to-green-400 bg-clip-text text-transparent">
-                            Everywhere
+                            {t.hero.titleHighlight}
                         </span>
                         <br />
-                        <span className="text-zinc-400">Instantly</span>
+                        <span className="text-zinc-400">{t.hero.titleSub}</span>
                     </motion.h1>
 
                     {/* Subtitle */}
@@ -95,8 +82,7 @@ export function Hero() {
                         transition={{ duration: 0.5, delay: 0.2 }}
                         className="max-w-2xl mx-auto text-lg sm:text-xl text-zinc-400 mb-10"
                     >
-                        One click to distribute your content across TikTok, Instagram, YouTube,
-                        Twitter, and more. Save hours every week with intelligent scheduling.
+                        {t.hero.description}
                     </motion.p>
 
                     {/* CTAs */}
@@ -108,15 +94,15 @@ export function Hero() {
                     >
                         <Link href="/register">
                             <Button size="xl" rightIcon={<ArrowRight className="h-5 w-5" />}>
-                                Start Free Trial
+                                {t.hero.cta}
                             </Button>
                         </Link>
                         <Button variant="ghost" size="xl" leftIcon={<Play className="h-5 w-5" />}>
-                            Watch Demo
+                            {t.hero.watchDemo}
                         </Button>
                     </motion.div>
 
-                    {/* Platform Icons Animation */}
+                    {/* Platform Icons */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
