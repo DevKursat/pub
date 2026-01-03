@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Bell, Search, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button, Avatar, Input } from '@/components/ui';
+import { Button } from '@/components/ui';
+import { useTranslation } from '@/lib/i18n';
 
 interface HeaderProps {
     title: string;
@@ -12,6 +12,8 @@ interface HeaderProps {
 }
 
 export function Header({ title, description }: HeaderProps) {
+    const { t, locale } = useTranslation();
+
     return (
         <header className="sticky top-0 z-30 h-16 bg-background/80 backdrop-blur-xl border-b border-border">
             <div className="flex items-center justify-between h-full px-6">
@@ -30,7 +32,7 @@ export function Header({ title, description }: HeaderProps) {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-subtle" />
                         <input
                             type="text"
-                            placeholder="Search..."
+                            placeholder={locale === 'tr' ? 'Ara...' : 'Search...'}
                             className={cn(
                                 'w-64 h-9 pl-9 pr-4 rounded-lg',
                                 'bg-background-secondary border border-border',
@@ -57,7 +59,7 @@ export function Header({ title, description }: HeaderProps) {
 
                     {/* New Post */}
                     <Button size="sm" leftIcon={<Plus className="w-4 h-4" />}>
-                        New Post
+                        {t.dashboard.newPost}
                     </Button>
                 </div>
             </div>

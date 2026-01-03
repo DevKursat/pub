@@ -1,90 +1,86 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import {
-    Users,
-    Send,
-    Eye,
-    TrendingUp,
-    Calendar,
-    Clock,
-    ArrowRight,
-    Plus,
-} from 'lucide-react';
+import { Users, Send, Eye, TrendingUp, Calendar, Clock, ArrowRight, Plus } from 'lucide-react';
 import { Header, StatsCard } from '@/components/dashboard';
-import { Card, CardHeader, CardTitle, CardContent, Button, Badge, Avatar } from '@/components/ui';
-
-const stats = [
-    {
-        title: 'Total Followers',
-        value: '124.5K',
-        change: { value: 12.5, trend: 'up' as const },
-        icon: Users,
-        color: '#8b5cf6',
-    },
-    {
-        title: 'Posts Published',
-        value: '847',
-        change: { value: 8.2, trend: 'up' as const },
-        icon: Send,
-        color: '#06b6d4',
-    },
-    {
-        title: 'Total Reach',
-        value: '2.4M',
-        change: { value: 23.1, trend: 'up' as const },
-        icon: Eye,
-        color: '#10b981',
-    },
-    {
-        title: 'Engagement Rate',
-        value: '4.8%',
-        change: { value: 0.3, trend: 'up' as const },
-        icon: TrendingUp,
-        color: '#f59e0b',
-    },
-];
-
-const recentPosts = [
-    {
-        id: 1,
-        content: 'Excited to announce our new feature launch! 🚀',
-        platforms: ['twitter', 'instagram', 'linkedin'],
-        status: 'published',
-        engagement: '1.2K',
-        time: '2 hours ago',
-    },
-    {
-        id: 2,
-        content: 'Behind the scenes of our product development...',
-        platforms: ['tiktok', 'youtube'],
-        status: 'scheduled',
-        engagement: '-',
-        time: 'Tomorrow, 10:00 AM',
-    },
-    {
-        id: 3,
-        content: '5 tips for growing your social media presence',
-        platforms: ['twitter', 'instagram', 'facebook'],
-        status: 'published',
-        engagement: '856',
-        time: '1 day ago',
-    },
-];
-
-const scheduledPosts = [
-    { time: '10:00 AM', title: 'Product announcement', platforms: 3 },
-    { time: '2:00 PM', title: 'Customer testimonial', platforms: 2 },
-    { time: '6:00 PM', title: 'Industry insights thread', platforms: 4 },
-];
+import { Card, CardHeader, CardTitle, CardContent, Button, Badge } from '@/components/ui';
+import { useTranslation } from '@/lib/i18n';
 
 export default function DashboardPage() {
+    const { t, locale } = useTranslation();
+
+    const stats = [
+        {
+            title: t.dashboard.stats.followers,
+            value: '124.5K',
+            change: { value: 12.5, trend: 'up' as const },
+            icon: Users,
+            color: '#8b5cf6',
+        },
+        {
+            title: t.dashboard.stats.posts,
+            value: '847',
+            change: { value: 8.2, trend: 'up' as const },
+            icon: Send,
+            color: '#06b6d4',
+        },
+        {
+            title: t.dashboard.stats.reach,
+            value: '2.4M',
+            change: { value: 23.1, trend: 'up' as const },
+            icon: Eye,
+            color: '#10b981',
+        },
+        {
+            title: t.dashboard.stats.engagement,
+            value: '4.8%',
+            change: { value: 0.3, trend: 'up' as const },
+            icon: TrendingUp,
+            color: '#f59e0b',
+        },
+    ];
+
+    const recentPosts = [
+        {
+            id: 1,
+            content: locale === 'tr' ? 'Yeni özellik lansmanımızı duyurmaktan heyecan duyuyoruz! 🚀' : 'Excited to announce our new feature launch! 🚀',
+            platforms: ['twitter', 'instagram', 'linkedin'],
+            status: 'published',
+            engagement: '1.2K',
+            time: locale === 'tr' ? '2 saat önce' : '2 hours ago',
+        },
+        {
+            id: 2,
+            content: locale === 'tr' ? 'Ürün geliştirme sürecimizin perde arkası...' : 'Behind the scenes of our product development...',
+            platforms: ['tiktok', 'youtube'],
+            status: 'scheduled',
+            engagement: '-',
+            time: locale === 'tr' ? 'Yarın, 10:00' : 'Tomorrow, 10:00 AM',
+        },
+        {
+            id: 3,
+            content: locale === 'tr' ? 'Sosyal medya varlığınızı büyütmek için 5 ipucu' : '5 tips for growing your social media presence',
+            platforms: ['twitter', 'instagram', 'facebook'],
+            status: 'published',
+            engagement: '856',
+            time: locale === 'tr' ? '1 gün önce' : '1 day ago',
+        },
+    ];
+
+    const scheduledPosts = [
+        { time: '10:00', title: locale === 'tr' ? 'Ürün duyurusu' : 'Product announcement', platforms: 3 },
+        { time: '14:00', title: locale === 'tr' ? 'Müşteri görüşü' : 'Customer testimonial', platforms: 2 },
+        { time: '18:00', title: locale === 'tr' ? 'Sektör içgörüleri' : 'Industry insights thread', platforms: 4 },
+    ];
+
     return (
         <>
-            <Header title="Dashboard" description="Welcome back, John 👋" />
+            <Header
+                title={locale === 'tr' ? 'Panel' : 'Dashboard'}
+                description={`${t.dashboard.welcome}, John 👋`}
+            />
 
             <div className="p-6 space-y-6">
-                {/* Stats Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {stats.map((stat, index) => (
                         <motion.div
@@ -99,7 +95,6 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Recent Posts */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -108,9 +103,9 @@ export default function DashboardPage() {
                     >
                         <Card padding="none">
                             <CardHeader className="p-6 pb-4 flex-row items-center justify-between">
-                                <CardTitle>Recent Posts</CardTitle>
+                                <CardTitle>{t.dashboard.recentPosts}</CardTitle>
                                 <Button variant="ghost" size="sm" rightIcon={<ArrowRight className="w-4 h-4" />}>
-                                    View all
+                                    {t.dashboard.viewAll}
                                 </Button>
                             </CardHeader>
                             <CardContent>
@@ -136,7 +131,10 @@ export default function DashboardPage() {
                                                 </div>
                                                 <div className="flex items-center gap-3">
                                                     <Badge variant={post.status === 'published' ? 'success' : 'primary'}>
-                                                        {post.status}
+                                                        {post.status === 'published'
+                                                            ? (locale === 'tr' ? 'Yayınlandı' : 'Published')
+                                                            : (locale === 'tr' ? 'Planlandı' : 'Scheduled')
+                                                        }
                                                     </Badge>
                                                     {post.status === 'published' && (
                                                         <span className="text-sm text-foreground-muted">{post.engagement}</span>
@@ -150,7 +148,6 @@ export default function DashboardPage() {
                         </Card>
                     </motion.div>
 
-                    {/* Today's Schedule */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -160,7 +157,7 @@ export default function DashboardPage() {
                             <CardHeader className="flex-row items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <Calendar className="w-5 h-5 text-primary" />
-                                    <CardTitle>Today's Schedule</CardTitle>
+                                    <CardTitle>{t.dashboard.schedule}</CardTitle>
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-4">
@@ -175,13 +172,15 @@ export default function DashboardPage() {
                                         </div>
                                         <div className="flex-1">
                                             <p className="text-sm text-foreground truncate">{post.title}</p>
-                                            <p className="text-xs text-foreground-subtle">{post.platforms} platforms</p>
+                                            <p className="text-xs text-foreground-subtle">
+                                                {post.platforms} {locale === 'tr' ? 'platform' : 'platforms'}
+                                            </p>
                                         </div>
                                     </div>
                                 ))}
 
                                 <Button variant="secondary" className="w-full" leftIcon={<Plus className="w-4 h-4" />}>
-                                    Schedule new post
+                                    {t.dashboard.scheduleNew}
                                 </Button>
                             </CardContent>
                         </Card>

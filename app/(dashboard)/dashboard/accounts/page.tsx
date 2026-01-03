@@ -4,98 +4,113 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Check, AlertCircle, Settings, Trash2, RefreshCw } from 'lucide-react';
 import { Header } from '@/components/dashboard';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button, Badge, Modal } from '@/components/ui';
+import { Card, Button, Badge, Modal } from '@/components/ui';
 import { cn } from '@/lib/utils';
-
-const platforms = [
-    {
-        id: 'tiktok',
-        name: 'TikTok',
-        color: '#ff0050',
-        icon: '🎵',
-        description: 'Short-form video content',
-    },
-    {
-        id: 'instagram',
-        name: 'Instagram',
-        color: '#e1306c',
-        icon: '📸',
-        description: 'Photos, Stories & Reels',
-    },
-    {
-        id: 'youtube',
-        name: 'YouTube',
-        color: '#ff0000',
-        icon: '▶️',
-        description: 'Long-form video content',
-    },
-    {
-        id: 'twitter',
-        name: 'Twitter/X',
-        color: '#1da1f2',
-        icon: '𝕏',
-        description: 'Tweets and threads',
-    },
-    {
-        id: 'facebook',
-        name: 'Facebook',
-        color: '#1877f2',
-        icon: '📘',
-        description: 'Posts and Stories',
-    },
-    {
-        id: 'linkedin',
-        name: 'LinkedIn',
-        color: '#0a66c2',
-        icon: '💼',
-        description: 'Professional content',
-    },
-    {
-        id: 'pinterest',
-        name: 'Pinterest',
-        color: '#e60023',
-        icon: '📌',
-        description: 'Visual discovery',
-    },
-];
-
-interface ConnectedAccount {
-    id: string;
-    platform: string;
-    username: string;
-    followers: string;
-    status: 'connected' | 'error' | 'expired';
-    lastSync: string;
-}
-
-const connectedAccounts: ConnectedAccount[] = [
-    { id: '1', platform: 'instagram', username: '@johndoe', followers: '45.2K', status: 'connected', lastSync: '5 min ago' },
-    { id: '2', platform: 'twitter', username: '@johndoe', followers: '23.1K', status: 'connected', lastSync: '12 min ago' },
-    { id: '3', platform: 'youtube', username: 'John Doe', followers: '12.3K', status: 'error', lastSync: '1 hour ago' },
-];
+import { useTranslation } from '@/lib/i18n';
 
 export default function AccountsPage() {
+    const { locale } = useTranslation();
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+
+    const platforms = [
+        {
+            id: 'tiktok',
+            name: 'TikTok',
+            color: '#ff0050',
+            icon: '🎵',
+            description: locale === 'tr' ? 'Kısa video içerik' : 'Short-form video content',
+        },
+        {
+            id: 'instagram',
+            name: 'Instagram',
+            color: '#e1306c',
+            icon: '📸',
+            description: locale === 'tr' ? 'Fotoğraf, Hikaye & Reels' : 'Photos, Stories & Reels',
+        },
+        {
+            id: 'youtube',
+            name: 'YouTube',
+            color: '#ff0000',
+            icon: '▶️',
+            description: locale === 'tr' ? 'Uzun video içerik' : 'Long-form video content',
+        },
+        {
+            id: 'twitter',
+            name: 'Twitter/X',
+            color: '#1da1f2',
+            icon: '𝕏',
+            description: locale === 'tr' ? 'Tweet ve thread\'ler' : 'Tweets and threads',
+        },
+        {
+            id: 'facebook',
+            name: 'Facebook',
+            color: '#1877f2',
+            icon: '📘',
+            description: locale === 'tr' ? 'Gönderi ve Hikayeler' : 'Posts and Stories',
+        },
+        {
+            id: 'linkedin',
+            name: 'LinkedIn',
+            color: '#0a66c2',
+            icon: '💼',
+            description: locale === 'tr' ? 'Profesyonel içerik' : 'Professional content',
+        },
+        {
+            id: 'pinterest',
+            name: 'Pinterest',
+            color: '#e60023',
+            icon: '📌',
+            description: locale === 'tr' ? 'Görsel keşif' : 'Visual discovery',
+        },
+    ];
+
+    interface ConnectedAccount {
+        id: string;
+        platform: string;
+        username: string;
+        followers: string;
+        status: 'connected' | 'error' | 'expired';
+        lastSync: string;
+    }
+
+    const connectedAccounts: ConnectedAccount[] = [
+        { id: '1', platform: 'instagram', username: '@johndoe', followers: '45.2K', status: 'connected', lastSync: locale === 'tr' ? '5 dk önce' : '5 min ago' },
+        { id: '2', platform: 'twitter', username: '@johndoe', followers: '23.1K', status: 'connected', lastSync: locale === 'tr' ? '12 dk önce' : '12 min ago' },
+        { id: '3', platform: 'youtube', username: 'John Doe', followers: '12.3K', status: 'error', lastSync: locale === 'tr' ? '1 saat önce' : '1 hour ago' },
+    ];
 
     const getPlatformInfo = (platformId: string) => {
         return platforms.find((p) => p.id === platformId);
     };
 
+    const t = {
+        title: locale === 'tr' ? 'Bağlı Hesaplar' : 'Connected Accounts',
+        description: locale === 'tr' ? 'Sosyal medya bağlantılarını yönet' : 'Manage your social media connections',
+        yourAccounts: locale === 'tr' ? 'Hesapların' : 'Your Accounts',
+        connectAccount: locale === 'tr' ? 'Hesap Bağla' : 'Connect Account',
+        connected: locale === 'tr' ? 'Bağlı' : 'Connected',
+        error: locale === 'tr' ? 'Hata' : 'Error',
+        followers: locale === 'tr' ? 'takipçi' : 'followers',
+        noAccounts: locale === 'tr' ? 'Henüz bağlı hesap yok' : 'No accounts connected yet',
+        connectFirst: locale === 'tr' ? 'İlk hesabını bağla' : 'Connect your first account',
+        availablePlatforms: locale === 'tr' ? 'Mevcut Platformlar' : 'Available Platforms',
+        choosePlatform: locale === 'tr' ? 'Bağlanmak için platform seç' : 'Choose a platform to connect',
+    };
+
     return (
         <>
-            <Header title="Connected Accounts" description="Manage your social media connections" />
+            <Header title={t.title} description={t.description} />
 
             <div className="p-6 space-y-8">
-                {/* Connected Accounts */}
                 <div>
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-semibold text-foreground">Your Accounts</h2>
+                        <h2 className="text-lg font-semibold text-foreground">{t.yourAccounts}</h2>
                         <Button
                             size="sm"
                             leftIcon={<Plus className="w-4 h-4" />}
                             onClick={() => setIsConnectModalOpen(true)}
                         >
-                            Connect Account
+                            {t.connectAccount}
                         </Button>
                     </div>
 
@@ -124,13 +139,11 @@ export default function AccountsPage() {
                                                         <div className="text-sm text-foreground-muted">{account.username}</div>
                                                     </div>
                                                 </div>
-                                                <Badge
-                                                    variant={account.status === 'connected' ? 'success' : 'error'}
-                                                >
+                                                <Badge variant={account.status === 'connected' ? 'success' : 'error'}>
                                                     {account.status === 'connected' ? (
-                                                        <><Check className="w-3 h-3 mr-1" /> Connected</>
+                                                        <><Check className="w-3 h-3 mr-1" /> {t.connected}</>
                                                     ) : (
-                                                        <><AlertCircle className="w-3 h-3 mr-1" /> Error</>
+                                                        <><AlertCircle className="w-3 h-3 mr-1" /> {t.error}</>
                                                     )}
                                                 </Badge>
                                             </div>
@@ -138,7 +151,7 @@ export default function AccountsPage() {
                                             <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
                                                 <div className="text-sm">
                                                     <span className="text-foreground font-medium">{account.followers}</span>
-                                                    <span className="text-foreground-muted ml-1">followers</span>
+                                                    <span className="text-foreground-muted ml-1">{t.followers}</span>
                                                 </div>
                                                 <div className="flex items-center gap-1">
                                                     <button className="p-1.5 rounded-lg text-foreground-subtle hover:text-foreground hover:bg-glass transition-colors">
@@ -159,17 +172,16 @@ export default function AccountsPage() {
                         </div>
                     ) : (
                         <Card className="text-center py-12">
-                            <p className="text-foreground-muted mb-4">No accounts connected yet</p>
+                            <p className="text-foreground-muted mb-4">{t.noAccounts}</p>
                             <Button onClick={() => setIsConnectModalOpen(true)}>
-                                Connect your first account
+                                {t.connectFirst}
                             </Button>
                         </Card>
                     )}
                 </div>
 
-                {/* Available Platforms */}
                 <div>
-                    <h2 className="text-lg font-semibold text-foreground mb-4">Available Platforms</h2>
+                    <h2 className="text-lg font-semibold text-foreground mb-4">{t.availablePlatforms}</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                         {platforms.map((platform, index) => {
                             const isConnected = connectedAccounts.some((a) => a.platform === platform.id);
@@ -211,12 +223,11 @@ export default function AccountsPage() {
                 </div>
             </div>
 
-            {/* Connect Modal */}
             <Modal
                 isOpen={isConnectModalOpen}
                 onClose={() => setIsConnectModalOpen(false)}
-                title="Connect Account"
-                description="Choose a platform to connect"
+                title={t.connectAccount}
+                description={t.choosePlatform}
                 size="lg"
             >
                 <div className="grid grid-cols-2 gap-3">
