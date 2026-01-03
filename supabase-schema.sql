@@ -270,19 +270,42 @@ $$ LANGUAGE plpgsql;
 -- ============================================
 -- STORAGE BUCKET
 -- ============================================
--- Run these in Supabase Dashboard > Storage
 
--- INSERT INTO storage.buckets (id, name, public) VALUES ('media', 'media', true);
+-- Create the media bucket
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+    'media', 
+    'media', 
+    true,
+    52428800, -- 50MB limit
+    ARRAY['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/quicktime', 'video/webm']
+) ON CONFLICT (id) DO NOTHING;
 
--- CREATE POLICY "Users can upload media" ON storage.objects FOR INSERT WITH CHECK (
---     bucket_id = 'media' AND auth.uid()::text = (storage.foldername(name))[1]
--- );
+-- Storage policies
+CREATE POLICY "Users can upload media to own folder"
+ON storage.objects FOR INSERT
+WITH CHECK (
+    bucket_id = 'media' 
+    AND auth.uid()::text = (storage.foldername(name))[1]
+);
 
--- CREATE POLICY "Anyone can view media" ON storage.objects FOR SELECT USING (bucket_id = 'media');
+CREATE POLICY "Anyone can view media"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'media');
 
--- CREATE POLICY "Users can delete own media" ON storage.objects FOR DELETE USING (
---     bucket_id = 'media' AND auth.uid()::text = (storage.foldername(name))[1]
--- );
+CREATE POLICY "Users can update own media"
+ON storage.objects FOR UPDATE
+USING (
+    bucket_id = 'media' 
+    AND auth.uid()::text = (storage.foldername(name))[1]
+);
+
+CREATE POLICY "Users can delete own media"
+ON storage.objects FOR DELETE
+USING (
+    bucket_id = 'media' 
+    AND auth.uid()::text = (storage.foldername(name))[1]
+);
 
 -- ============================================
 -- DONE! Your database is ready.
