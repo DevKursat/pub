@@ -12,14 +12,18 @@
     "@supabase/auth-helpers-nextjs": "^0.15.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.10",
+    "buffer": "^6.0.3",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^11.13.5",
+    "input": "^1.0.1",
+    "instagram-private-api": "^1.46.1",
     "lucide-react": "^0.468.0",
     "next": "14.2.18",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.0",
+    "telegram": "^2.26.22"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
