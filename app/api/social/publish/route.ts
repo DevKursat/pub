@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
+import type { Platform, PostContent } from '@/lib/social-media-service';
 
 export async function POST(request: NextRequest) {
     try {
@@ -13,7 +14,21 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { postId, platforms, content, mediaPath, mediaType, channelIds } = body;
+        const { postId, platforms, content, mediaPath, mediaType } = body as {
+            postId?: string;
+            platforms: Platform[];
+            content: string;
+            mediaPath?: string;
+            mediaType?: 'photo' | 'video';
+        };
+
+        if (!platforms || platforms.length === 0) {
+            return NextResponse.json({ error: 'At least one platform is required' }, { status: 400 });
+        }
+
+        if (!content) {
+            return NextResponse.json({ error: 'Content is required' }, { status: 400 });
+        }
 
         // Get connected accounts for specified platforms
         const { data: accounts, error: accountsError } = await supabase
@@ -37,56 +52,23 @@ export async function POST(request: NextRequest) {
         const { socialMediaService } = await import('@/lib/social-media-service');
 
         const results = [];
+        const postContent: PostContent = {
+            text: content,
+            mediaPath,
+            mediaType,
+        };
 
         for (const account of accounts) {
             try {
                 // Decrypt session
                 const session = Buffer.from(account.access_token, 'base64').toString('utf-8');
-                let result;
 
-                switch (account.platform) {
-                    case 'instagram':
-                        if (!mediaPath) {
-                            result = {
-                                success: false,
-                                platform: 'instagram',
-                                error: 'Instagram için medya gerekli (fotoğraf veya video)'
-                            };
-                        } else {
-                            result = await socialMediaService.postToInstagram(
-                                session,
-                                content,
-                                mediaPath,
-                                mediaType || 'photo'
-                            );
-                        }
-                        break;
-
-                    case 'telegram':
-                        const channelId = channelIds?.[account.platform] || channelIds?.telegram;
-                        if (!channelId) {
-                            result = {
-                                success: false,
-                                platform: 'telegram',
-                                error: 'Telegram kanal adı gerekli'
-                            };
-                        } else {
-                            result = await socialMediaService.postToTelegram(
-                                session,
-                                channelId,
-                                content,
-                                mediaPath
-                            );
-                        }
-                        break;
-
-                    default:
-                        result = {
-                            success: false,
-                            platform: account.platform,
-                            error: `${account.platform} henüz desteklenmiyor`
-                        };
-                }
+                // Post to platform
+                const result = await socialMediaService.post(
+                    account.platform as Platform,
+                    session,
+                    postContent
+                );
 
                 // Save post result to database
                 if (postId) {

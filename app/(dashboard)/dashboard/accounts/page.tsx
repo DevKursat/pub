@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Check, AlertCircle, Trash2, Loader2, Eye, EyeOff, Send } from 'lucide-react';
+import { Plus, Check, AlertCircle, Trash2, Loader2, Eye, EyeOff } from 'lucide-react';
 import { Header } from '@/components/dashboard';
 import { Card, Button, Badge, Modal, Input } from '@/components/ui';
 import { cn } from '@/lib/utils';
@@ -10,36 +10,40 @@ import { useTranslation } from '@/lib/i18n';
 import { useAccounts, formatNumber } from '@/lib/hooks';
 import { useSearchParams } from 'next/navigation';
 
-const platforms = [
-    { id: 'instagram', name: 'Instagram', color: '#e1306c', icon: '📸', authType: 'credentials' },
-    { id: 'telegram', name: 'Telegram', color: '#0088cc', icon: '📨', authType: 'phone' },
-    { id: 'tiktok', name: 'TikTok', color: '#ff0050', icon: '🎵', authType: 'coming_soon' },
-    { id: 'youtube', name: 'YouTube', color: '#ff0000', icon: '▶️', authType: 'coming_soon' },
-    { id: 'twitter', name: 'Twitter/X', color: '#1da1f2', icon: '𝕏', authType: 'coming_soon' },
-    { id: 'facebook', name: 'Facebook', color: '#1877f2', icon: '📘', authType: 'coming_soon' },
-    { id: 'linkedin', name: 'LinkedIn', color: '#0a66c2', icon: '💼', authType: 'coming_soon' },
-];
+interface PlatformInfo {
+    id: string;
+    name: string;
+    icon: string;
+    color: string;
+    authMethod: string;
+    status: string;
+    description: string;
+}
 
 export default function AccountsPage() {
     const { locale } = useTranslation();
     const searchParams = useSearchParams();
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
-    const [selectedPlatform, setSelectedPlatform] = useState<typeof platforms[0] | null>(null);
+    const [selectedPlatform, setSelectedPlatform] = useState<PlatformInfo | null>(null);
     const [connecting, setConnecting] = useState(false);
     const [connectionError, setConnectionError] = useState('');
     const [connectionSuccess, setConnectionSuccess] = useState('');
     const { accounts, loading, disconnectAccount, fetchAccounts } = useAccounts();
+    const [platforms, setPlatforms] = useState<PlatformInfo[]>([]);
 
-    // Instagram state
-    const [igUsername, setIgUsername] = useState('');
-    const [igPassword, setIgPassword] = useState('');
+    // Form state
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
-    // Telegram state
-    const [tgPhone, setTgPhone] = useState('');
-    const [tgCode, setTgCode] = useState('');
-    const [tgPhoneCodeHash, setTgPhoneCodeHash] = useState('');
-    const [tgStep, setTgStep] = useState<'phone' | 'code'>('phone');
+    // Fetch platforms on mount
+    useEffect(() => {
+        fetch('/api/social/connect')
+            .then(res => res.json())
+            .then(data => setPlatforms(data.platforms || []))
+            .catch(() => { });
+    }, []);
 
     useEffect(() => {
         const success = searchParams.get('success');
@@ -64,15 +68,13 @@ export default function AccountsPage() {
         choosePlatform: locale === 'tr' ? 'Bağlanmak için platform seç' : 'Choose a platform to connect',
         connecting: locale === 'tr' ? 'Bağlanıyor...' : 'Connecting...',
         comingSoon: locale === 'tr' ? 'Yakında' : 'Coming Soon',
+        beta: locale === 'tr' ? 'Beta' : 'Beta',
         username: locale === 'tr' ? 'Kullanıcı Adı' : 'Username',
+        email: locale === 'tr' ? 'E-posta' : 'Email',
         password: locale === 'tr' ? 'Şifre' : 'Password',
-        phone: locale === 'tr' ? 'Telefon Numarası' : 'Phone Number',
-        code: locale === 'tr' ? 'Doğrulama Kodu' : 'Verification Code',
-        sendCode: locale === 'tr' ? 'Kod Gönder' : 'Send Code',
-        verify: locale === 'tr' ? 'Doğrula' : 'Verify',
         connect: locale === 'tr' ? 'Bağlan' : 'Connect',
-        phonePlaceholder: locale === 'tr' ? '+90 5XX XXX XX XX' : '+1 XXX XXX XXXX',
-        codePlaceholder: locale === 'tr' ? '6 haneli kod' : '6-digit code',
+        back: locale === 'tr' ? 'Geri' : 'Back',
+        loginWith: locale === 'tr' ? 'ile giriş yap' : 'login with',
     };
 
     const getPlatformInfo = (platformId: string) => platforms.find((p) => p.id === platformId);
@@ -96,17 +98,22 @@ export default function AccountsPage() {
         }
     };
 
-    const handlePlatformSelect = (platform: typeof platforms[0]) => {
-        if (platform.authType === 'coming_soon') return;
+    const handlePlatformSelect = (platform: PlatformInfo) => {
+        if (platform.status === 'coming_soon') return;
         setSelectedPlatform(platform);
         setConnectionError('');
         setConnectionSuccess('');
-        setTgStep('phone');
-        setTgPhoneCodeHash('');
+        setUsername('');
+        setEmail('');
+        setPassword('');
     };
 
-    const handleInstagramConnect = async () => {
-        if (!igUsername || !igPassword) return;
+    const handleConnect = async () => {
+        if (!selectedPlatform || !password) return;
+
+        const usernameValue = selectedPlatform.authMethod === 'email_password' ? email : username;
+        if (!usernameValue) return;
+
         setConnecting(true);
         setConnectionError('');
 
@@ -115,10 +122,10 @@ export default function AccountsPage() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    platform: 'instagram',
-                    action: 'connect',
-                    username: igUsername,
-                    password: igPassword,
+                    platform: selectedPlatform.id,
+                    username: usernameValue,
+                    email: email || undefined,
+                    password,
                 }),
             });
 
@@ -128,14 +135,13 @@ export default function AccountsPage() {
                 throw new Error(data.message || data.error);
             }
 
-            setConnectionSuccess(`${data.account.username} başarıyla bağlandı!`);
-            setIgUsername('');
-            setIgPassword('');
+            setConnectionSuccess(`${data.account.displayName || data.account.username} başarıyla bağlandı!`);
             fetchAccounts();
 
             setTimeout(() => {
                 setSelectedPlatform(null);
                 setIsConnectModalOpen(false);
+                setConnectionSuccess('');
             }, 2000);
         } catch (error: any) {
             setConnectionError(error.message);
@@ -144,189 +150,89 @@ export default function AccountsPage() {
         }
     };
 
-    const handleTelegramSendCode = async () => {
-        if (!tgPhone) return;
-        setConnecting(true);
-        setConnectionError('');
-
-        try {
-            const response = await fetch('/api/social/connect', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    platform: 'telegram',
-                    action: 'send_code',
-                    phone: tgPhone,
-                }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || data.error);
-            }
-
-            setTgPhoneCodeHash(data.phoneCodeHash);
-            setTgStep('code');
-            setConnectionSuccess(data.message);
-        } catch (error: any) {
-            setConnectionError(error.message);
-        } finally {
-            setConnecting(false);
-        }
-    };
-
-    const handleTelegramVerify = async () => {
-        if (!tgCode || !tgPhoneCodeHash) return;
-        setConnecting(true);
-        setConnectionError('');
-
-        try {
-            const response = await fetch('/api/social/connect', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    platform: 'telegram',
-                    action: 'verify_code',
-                    phone: tgPhone,
-                    code: tgCode,
-                    phoneCodeHash: tgPhoneCodeHash,
-                }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || data.error);
-            }
-
-            setConnectionSuccess(`Telegram başarıyla bağlandı!`);
-            setTgPhone('');
-            setTgCode('');
-            fetchAccounts();
-
-            setTimeout(() => {
-                setSelectedPlatform(null);
-                setIsConnectModalOpen(false);
-            }, 2000);
-        } catch (error: any) {
-            setConnectionError(error.message);
-        } finally {
-            setConnecting(false);
-        }
-    };
-
-    const renderPlatformForm = () => {
+    const renderConnectForm = () => {
         if (!selectedPlatform) return null;
 
-        if (selectedPlatform.id === 'instagram') {
-            return (
-                <div className="space-y-4">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div
-                            className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-                            style={{ backgroundColor: `${selectedPlatform.color}15` }}
-                        >
-                            {selectedPlatform.icon}
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-foreground">{selectedPlatform.name}</h3>
-                            <p className="text-sm text-foreground-muted">Kullanıcı adı ve şifre ile giriş</p>
-                        </div>
-                    </div>
+        const isEmailAuth = selectedPlatform.authMethod === 'email_password';
 
+        return (
+            <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-border">
+                    <div
+                        className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl"
+                        style={{ backgroundColor: `${selectedPlatform.color}15` }}
+                    >
+                        {selectedPlatform.icon}
+                    </div>
+                    <div>
+                        <h3 className="font-semibold text-foreground text-lg">{selectedPlatform.name}</h3>
+                        <p className="text-sm text-foreground-muted">{selectedPlatform.description}</p>
+                        {selectedPlatform.status === 'beta' && (
+                            <Badge variant="warning" className="mt-1">{t.beta}</Badge>
+                        )}
+                    </div>
+                </div>
+
+                {isEmailAuth ? (
+                    <Input
+                        label={t.email}
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="email@example.com"
+                    />
+                ) : (
                     <Input
                         label={t.username}
-                        value={igUsername}
-                        onChange={(e) => setIgUsername(e.target.value)}
-                        placeholder="instagram_username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder={`${selectedPlatform.name} ${t.username.toLowerCase()}`}
                     />
+                )}
 
-                    <div className="relative">
-                        <Input
-                            label={t.password}
-                            type={showPassword ? 'text' : 'password'}
-                            value={igPassword}
-                            onChange={(e) => setIgPassword(e.target.value)}
-                            placeholder="••••••••"
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-9 text-foreground-muted hover:text-foreground"
-                        >
-                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </button>
-                    </div>
+                {selectedPlatform.id === 'twitter' && (
+                    <Input
+                        label={`${t.email} (opsiyonel)`}
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="email@example.com"
+                    />
+                )}
 
-                    <Button
-                        className="w-full"
-                        onClick={handleInstagramConnect}
-                        disabled={connecting || !igUsername || !igPassword}
-                        leftIcon={connecting ? <Loader2 className="w-4 h-4 animate-spin" /> : undefined}
+                <div className="relative">
+                    <Input
+                        label={t.password}
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-9 text-foreground-muted hover:text-foreground"
                     >
-                        {connecting ? t.connecting : t.connect}
-                    </Button>
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
                 </div>
-            );
-        }
 
-        if (selectedPlatform.id === 'telegram') {
-            return (
-                <div className="space-y-4">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div
-                            className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-                            style={{ backgroundColor: `${selectedPlatform.color}15` }}
-                        >
-                            {selectedPlatform.icon}
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-foreground">{selectedPlatform.name}</h3>
-                            <p className="text-sm text-foreground-muted">Telefon numarası ile giriş</p>
-                        </div>
-                    </div>
-
-                    {tgStep === 'phone' ? (
-                        <>
-                            <Input
-                                label={t.phone}
-                                value={tgPhone}
-                                onChange={(e) => setTgPhone(e.target.value)}
-                                placeholder={t.phonePlaceholder}
-                            />
-                            <Button
-                                className="w-full"
-                                onClick={handleTelegramSendCode}
-                                disabled={connecting || !tgPhone}
-                                leftIcon={connecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                            >
-                                {connecting ? t.connecting : t.sendCode}
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                            <Input
-                                label={t.code}
-                                value={tgCode}
-                                onChange={(e) => setTgCode(e.target.value)}
-                                placeholder={t.codePlaceholder}
-                            />
-                            <Button
-                                className="w-full"
-                                onClick={handleTelegramVerify}
-                                disabled={connecting || !tgCode}
-                                leftIcon={connecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                            >
-                                {connecting ? t.connecting : t.verify}
-                            </Button>
-                        </>
-                    )}
+                <div className="p-3 bg-warning/10 border border-warning/20 rounded-lg text-sm text-warning">
+                    ⚠️ {locale === 'tr'
+                        ? 'Şifreniz güvenli bir şekilde saklanır ve sadece hesap bağlantısı için kullanılır.'
+                        : 'Your password is stored securely and only used for account connection.'}
                 </div>
-            );
-        }
 
-        return null;
+                <Button
+                    className="w-full"
+                    onClick={handleConnect}
+                    disabled={connecting || !password || (isEmailAuth ? !email : !username)}
+                    leftIcon={connecting ? <Loader2 className="w-4 h-4 animate-spin" /> : undefined}
+                >
+                    {connecting ? t.connecting : t.connect}
+                </Button>
+            </div>
+        );
     };
 
     return (
@@ -366,9 +272,9 @@ export default function AccountsPage() {
                                             <div className="flex items-start gap-4">
                                                 <div
                                                     className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
-                                                    style={{ backgroundColor: `${platform?.color}15` }}
+                                                    style={{ backgroundColor: `${platform?.color || '#666'}15` }}
                                                 >
-                                                    {platform?.icon}
+                                                    {platform?.icon || '📱'}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="font-medium text-foreground truncate">
@@ -416,12 +322,12 @@ export default function AccountsPage() {
             <Modal
                 isOpen={isConnectModalOpen}
                 onClose={() => { setIsConnectModalOpen(false); setSelectedPlatform(null); }}
-                title={selectedPlatform ? selectedPlatform.name : t.availablePlatforms}
+                title={selectedPlatform ? `${selectedPlatform.name} ${t.loginWith}` : t.availablePlatforms}
             >
                 {connectionError && (
-                    <div className="mb-4 p-3 bg-error/10 border border-error/20 rounded-lg text-error text-sm flex items-center gap-2">
-                        <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                        {connectionError}
+                    <div className="mb-4 p-3 bg-error/10 border border-error/20 rounded-lg text-error text-sm flex items-start gap-2">
+                        <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                        <span>{connectionError}</span>
                     </div>
                 )}
 
@@ -436,11 +342,11 @@ export default function AccountsPage() {
                     <div>
                         <button
                             onClick={() => setSelectedPlatform(null)}
-                            className="text-sm text-foreground-muted hover:text-foreground mb-4"
+                            className="text-sm text-foreground-muted hover:text-foreground mb-4 flex items-center gap-1"
                         >
-                            ← {locale === 'tr' ? 'Geri' : 'Back'}
+                            ← {t.back}
                         </button>
-                        {renderPlatformForm()}
+                        {renderConnectForm()}
                     </div>
                 ) : (
                     <>
@@ -448,7 +354,8 @@ export default function AccountsPage() {
                         <div className="grid grid-cols-2 gap-3">
                             {platforms.map((platform) => {
                                 const isConnected = accounts.some((a) => a.platform === platform.id);
-                                const isComingSoon = platform.authType === 'coming_soon';
+                                const isComingSoon = platform.status === 'coming_soon';
+                                const isBeta = platform.status === 'beta';
 
                                 return (
                                     <button
@@ -465,12 +372,18 @@ export default function AccountsPage() {
                                         )}
                                     >
                                         <span className="text-2xl">{platform.icon}</span>
-                                        <span className="font-medium text-foreground">{platform.name}</span>
+                                        <div className="flex-1">
+                                            <span className="font-medium text-foreground block">{platform.name}</span>
+                                            <span className="text-xs text-foreground-muted">{platform.description}</span>
+                                        </div>
                                         {isConnected && (
-                                            <Check className="w-4 h-4 text-success absolute right-3" />
+                                            <Check className="w-4 h-4 text-success absolute right-3 top-3" />
                                         )}
                                         {isComingSoon && (
-                                            <span className="text-xs text-foreground-subtle absolute right-3">{t.comingSoon}</span>
+                                            <span className="text-xs bg-background-tertiary px-2 py-0.5 rounded absolute right-3 top-3">{t.comingSoon}</span>
+                                        )}
+                                        {isBeta && !isConnected && (
+                                            <span className="text-xs bg-warning/20 text-warning px-2 py-0.5 rounded absolute right-3 top-3">{t.beta}</span>
                                         )}
                                     </button>
                                 );
