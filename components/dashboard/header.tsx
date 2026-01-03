@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Bell, Search, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -58,9 +59,11 @@ export function Header({ title, description }: HeaderProps) {
                     </motion.button>
 
                     {/* New Post */}
-                    <Button size="sm" leftIcon={<Plus className="w-4 h-4" />}>
-                        {t.dashboard.newPost}
-                    </Button>
+                    <Link href="/dashboard/publish">
+                        <Button size="sm" leftIcon={<Plus className="w-4 h-4" />}>
+                            {t.dashboard.newPost}
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </header>

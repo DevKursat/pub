@@ -121,13 +121,15 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             </div>
 
             <div className={cn('px-3 mb-4', isCollapsed && 'px-2')}>
-                <Button
-                    size={isCollapsed ? 'md' : 'lg'}
-                    className={cn('w-full', isCollapsed && 'px-0')}
-                    leftIcon={<Plus className="w-5 h-5" />}
-                >
-                    {!isCollapsed && t.dashboard.newPost}
-                </Button>
+                <Link href="/dashboard/publish">
+                    <Button
+                        size={isCollapsed ? 'md' : 'lg'}
+                        className={cn('w-full', isCollapsed && 'px-0')}
+                        leftIcon={<Plus className="w-5 h-5" />}
+                    >
+                        {!isCollapsed && t.dashboard.newPost}
+                    </Button>
+                </Link>
             </div>
 
             <nav className="flex-1 px-3 space-y-1">
