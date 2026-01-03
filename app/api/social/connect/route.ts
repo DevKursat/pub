@@ -1,5 +1,5 @@
 // API Route for connecting social media accounts using open-source libraries
-// Supports: Instagram, Twitter, LinkedIn, TikTok
+// Supports: Instagram, Twitter, LinkedIn, TikTok, YouTube
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Validate credentials based on platform
-        const supportedPlatforms = ['instagram', 'twitter', 'linkedin', 'tiktok'];
+        const supportedPlatforms = ['instagram', 'twitter', 'linkedin', 'tiktok', 'youtube'];
 
         if (!supportedPlatforms.includes(platform)) {
             return NextResponse.json({
@@ -36,17 +36,37 @@ export async function POST(request: NextRequest) {
             }, { status: 400 });
         }
 
-        if (!username || !password) {
+        // YouTube requires email
+        if (platform === 'youtube' && !email) {
             return NextResponse.json({
-                error: 'Username and password are required',
+                error: 'YouTube requires Google email',
+            }, { status: 400 });
+        }
+
+        const usernameOrEmail = platform === 'youtube' ? email : username;
+
+        if (!usernameOrEmail || !password) {
+            return NextResponse.json({
+                error: 'Username/email and password are required',
             }, { status: 400 });
         }
 
         // Dynamic import to avoid server-side issues
         const { socialMediaService } = await import('@/lib/social-media-service');
 
+        // Check worker status for TikTok/YouTube
+        if (platform === 'tiktok' || platform === 'youtube') {
+            const workerRunning = await socialMediaService.checkWorkerStatus();
+            if (!workerRunning) {
+                return NextResponse.json({
+                    error: 'worker_not_running',
+                    message: `${platform === 'tiktok' ? 'TikTok' : 'YouTube'} bağlantısı için worker servisi gerekli. Terminalde şu komutu çalıştırın: node worker/social-automation.js`,
+                }, { status: 503 });
+            }
+        }
+
         const credentials: SocialCredentials = {
-            username,
+            username: usernameOrEmail,
             email,
             password,
         };
@@ -113,6 +133,13 @@ export async function POST(request: NextRequest) {
                 }, { status: 401 });
             }
 
+            if (error.message.includes('worker')) {
+                return NextResponse.json({
+                    error: 'worker_error',
+                    message: error.message,
+                }, { status: 503 });
+            }
+
             return NextResponse.json({
                 error: error.message,
                 message: 'Bağlantı sırasında bir hata oluştu.',
@@ -135,7 +162,8 @@ export async function GET() {
                 color: '#e1306c',
                 authMethod: 'username_password',
                 status: 'active',
-                description: 'Fotoğraf ve video paylaş'
+                description: 'Fotoğraf ve video paylaş',
+                requiresWorker: false,
             },
             {
                 id: 'twitter',
@@ -144,7 +172,8 @@ export async function GET() {
                 color: '#1da1f2',
                 authMethod: 'username_password',
                 status: 'active',
-                description: 'Tweet paylaş'
+                description: 'Tweet paylaş',
+                requiresWorker: false,
             },
             {
                 id: 'linkedin',
@@ -153,7 +182,8 @@ export async function GET() {
                 color: '#0a66c2',
                 authMethod: 'email_password',
                 status: 'active',
-                description: 'Profesyonel içerik paylaş'
+                description: 'Profesyonel içerik paylaş',
+                requiresWorker: false,
             },
             {
                 id: 'tiktok',
@@ -161,35 +191,39 @@ export async function GET() {
                 icon: '🎵',
                 color: '#ff0050',
                 authMethod: 'username_password',
-                status: 'beta',
-                description: 'Video paylaş (beta)'
+                status: 'active',
+                description: 'Video paylaş',
+                requiresWorker: true,
             },
             {
                 id: 'youtube',
                 name: 'YouTube',
                 icon: '▶️',
                 color: '#ff0000',
-                authMethod: 'cookies',
-                status: 'coming_soon',
-                description: 'Yakında'
+                authMethod: 'email_password',
+                status: 'active',
+                description: 'Video yükle',
+                requiresWorker: true,
             },
             {
                 id: 'facebook',
                 name: 'Facebook',
                 icon: '📘',
                 color: '#1877f2',
-                authMethod: 'cookies',
+                authMethod: 'email_password',
                 status: 'coming_soon',
-                description: 'Yakında'
+                description: 'Yakında',
+                requiresWorker: true,
             },
             {
                 id: 'pinterest',
                 name: 'Pinterest',
                 icon: '📌',
                 color: '#e60023',
-                authMethod: 'cookies',
+                authMethod: 'email_password',
                 status: 'coming_soon',
-                description: 'Yakında'
+                description: 'Yakında',
+                requiresWorker: true,
             },
         ]
     });

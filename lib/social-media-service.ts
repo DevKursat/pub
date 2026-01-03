@@ -1,12 +1,18 @@
 // Social Media Service using Open Source Libraries
 // 
-// Libraries Used:
+// Direct API Libraries:
 // - Instagram: instagram-private-api (username/password login)
 // - Twitter/X: @the-convocation/twitter-scraper (cookies-based)
 // - LinkedIn: linkedin-private-api (username/password login)
-// Note: TikTok, YouTube, Facebook need browser automation which runs separately
+//
+// Browser Automation (via Worker):
+// - TikTok: puppeteer automation
+// - YouTube: puppeteer automation
 
 import { IgApiClient, IgCheckpointError } from 'instagram-private-api';
+
+// Worker URL for browser automation
+const WORKER_URL = process.env.SOCIAL_WORKER_URL || 'http://localhost:3001';
 
 // ============================================
 // TYPE DEFINITIONS
@@ -46,6 +52,7 @@ export interface PostContent {
     mediaPath?: string;
     mediaType?: 'photo' | 'video';
     coverPath?: string;
+    title?: string; // For YouTube
 }
 
 // ============================================
@@ -250,12 +257,143 @@ class LinkedInService {
     }
 
     async post(content: PostContent): Promise<PostResult> {
-        // LinkedIn unofficial API doesn't support posting yet
         return {
             success: false,
             platform: 'linkedin',
-            error: 'LinkedIn posting is not yet available in this version'
+            error: 'LinkedIn posting requires worker automation'
         };
+    }
+}
+
+// ============================================
+// TIKTOK SERVICE (via Worker)
+// ============================================
+
+class TikTokService {
+    private async callWorker(endpoint: string, data: any): Promise<any> {
+        try {
+            const response = await fetch(`${WORKER_URL}${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Worker request failed');
+            }
+
+            return response.json();
+        } catch (error: any) {
+            if (error.message.includes('ECONNREFUSED')) {
+                throw new Error('TikTok worker is not running. Start with: node worker/social-automation.js');
+            }
+            throw error;
+        }
+    }
+
+    async login(username: string, password: string): Promise<SocialAccount> {
+        const result = await this.callWorker('/tiktok/login', { username, password });
+        return {
+            platform: 'tiktok',
+            userId: result.userId,
+            username: result.username,
+            displayName: result.displayName,
+            profilePicUrl: result.profilePicUrl,
+            followersCount: result.followersCount,
+            session: result.session,
+            isConnected: true,
+        };
+    }
+
+    async post(sessionData: string, content: PostContent): Promise<PostResult> {
+        if (!content.mediaPath) {
+            return { success: false, platform: 'tiktok', error: 'TikTok requires a video file' };
+        }
+
+        try {
+            const result = await this.callWorker('/tiktok/upload', {
+                session: sessionData,
+                videoPath: content.mediaPath,
+                caption: content.text,
+            });
+
+            return {
+                success: result.success,
+                platform: 'tiktok',
+                postId: result.postId,
+                error: result.error,
+            };
+        } catch (error: any) {
+            return { success: false, platform: 'tiktok', error: error.message };
+        }
+    }
+}
+
+// ============================================
+// YOUTUBE SERVICE (via Worker)
+// ============================================
+
+class YouTubeService {
+    private async callWorker(endpoint: string, data: any): Promise<any> {
+        try {
+            const response = await fetch(`${WORKER_URL}${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Worker request failed');
+            }
+
+            return response.json();
+        } catch (error: any) {
+            if (error.message.includes('ECONNREFUSED')) {
+                throw new Error('YouTube worker is not running. Start with: node worker/social-automation.js');
+            }
+            throw error;
+        }
+    }
+
+    async login(email: string, password: string): Promise<SocialAccount> {
+        const result = await this.callWorker('/youtube/login', { email, password });
+        return {
+            platform: 'youtube',
+            userId: result.userId,
+            username: result.username,
+            displayName: result.displayName,
+            profilePicUrl: result.profilePicUrl,
+            followersCount: result.followersCount || 0,
+            session: result.session,
+            isConnected: true,
+        };
+    }
+
+    async post(sessionData: string, content: PostContent): Promise<PostResult> {
+        if (!content.mediaPath) {
+            return { success: false, platform: 'youtube', error: 'YouTube requires a video file' };
+        }
+
+        try {
+            const result = await this.callWorker('/youtube/upload', {
+                session: sessionData,
+                videoPath: content.mediaPath,
+                title: content.title || content.text.substring(0, 100),
+                description: content.text,
+            });
+
+            return {
+                success: result.success,
+                platform: 'youtube',
+                postId: result.postId,
+                postUrl: result.postUrl,
+                error: result.error,
+            };
+        } catch (error: any) {
+            return { success: false, platform: 'youtube', error: error.message };
+        }
     }
 }
 
@@ -267,11 +405,15 @@ export class SocialMediaService {
     private instagramService: InstagramService;
     private twitterService: TwitterService;
     private linkedInService: LinkedInService;
+    private tiktokService: TikTokService;
+    private youtubeService: YouTubeService;
 
     constructor() {
         this.instagramService = new InstagramService();
         this.twitterService = new TwitterService();
         this.linkedInService = new LinkedInService();
+        this.tiktokService = new TikTokService();
+        this.youtubeService = new YouTubeService();
     }
 
     async connect(platform: Platform, credentials: SocialCredentials): Promise<SocialAccount> {
@@ -295,13 +437,16 @@ export class SocialMediaService {
                 return this.linkedInService.login(credentials.username, credentials.password);
 
             case 'tiktok':
-                throw new Error('TikTok connection requires browser automation. Please use cookies-based login.');
+                if (!credentials.username || !credentials.password) {
+                    throw new Error('TikTok requires username and password');
+                }
+                return this.tiktokService.login(credentials.username, credentials.password);
 
             case 'youtube':
-                throw new Error('YouTube connection requires browser automation. Please use cookies-based login.');
-
-            case 'facebook':
-                throw new Error('Facebook connection requires browser automation. Please use cookies-based login.');
+                if (!credentials.email || !credentials.password) {
+                    throw new Error('YouTube requires Google email and password');
+                }
+                return this.youtubeService.login(credentials.email, credentials.password);
 
             default:
                 throw new Error(`Platform ${platform} not yet supported`);
@@ -321,6 +466,12 @@ export class SocialMediaService {
             case 'linkedin':
                 return this.linkedInService.post(content);
 
+            case 'tiktok':
+                return this.tiktokService.post(sessionData, content);
+
+            case 'youtube':
+                return this.youtubeService.post(sessionData, content);
+
             default:
                 return { success: false, platform, error: `Platform ${platform} not yet supported for posting` };
         }
@@ -338,6 +489,16 @@ export class SocialMediaService {
         }
 
         return results;
+    }
+
+    // Check if worker is running for TikTok/YouTube
+    async checkWorkerStatus(): Promise<boolean> {
+        try {
+            const response = await fetch(`${WORKER_URL}/health`);
+            return response.ok;
+        } catch {
+            return false;
+        }
     }
 }
 
